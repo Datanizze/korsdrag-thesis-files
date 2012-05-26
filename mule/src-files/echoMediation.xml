@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="CE-3.2.1" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd 
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd 
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd ">
+    <http:endpoint name="EP-EchoMediationWS" address="http://0.0.0.0:8082/Echo" doc:name="HTTP"/>
+    <http:endpoint name="EP-EchoServiceWS2" address="http://194.47.150.44:6587/EchoService" doc:name="HTTP"/>
+    <http:endpoint name="EP-EchoServiceWS3" address="http://194.47.150.32:6587/EchoService" doc:name="HTTP"/>
+    <flow name="echoMediation" doc:name="echoMediation">
+        <inbound-endpoint exchange-pattern="request-response" ref="EP-EchoMediationWS" doc:name="EchoProxy"/>
+        <cxf:proxy-service namespace="http://ws.webservice.korsdrag.datanizze.se/" service="EchoServiceImplService" wsdlLocation="http://194.47.150.44:6587/EchoService?wsdl" enableMuleSoapHeaders="false" doc:name="SOAP"/>
+        <transformer ref="xml2output obj2str" doc:name="Transformer Reference"/>
+        <choice doc:name="Choice">
+            <when expression="//id=1" evaluator="xpath">
+                <processor-chain>
+                    <logger message="GOING FOR 1" level="INFO" doc:name="Logger"/>
+                    <outbound-endpoint exchange-pattern="request-response" ref="EP-EchoServiceWS" doc:name="Generic">
+                        <cxf:proxy-client/>
+                    </outbound-endpoint>
+                </processor-chain>
+            </when>
+            <when expression="//id=2" evaluator="xpath">
+                <processor-chain>
+                    <logger message="GOING FOR two" level="INFO" doc:name="Logger"/>
+                    <outbound-endpoint exchange-pattern="request-response" ref="EP-EchoServiceWS2" doc:name="Generic">
+                        <cxf:proxy-client/>
+                    </outbound-endpoint>
+                </processor-chain>
+            </when>
+            <when expression="//id=3" evaluator="xpath">
+                <processor-chain>
+                    <logger message="GOING FOR troi" level="INFO" doc:name="Logger"/>
+                    <outbound-endpoint exchange-pattern="request-response" ref="EP-EchoServiceWS3" doc:name="Generic">
+                        <cxf:proxy-client/>
+                    </outbound-endpoint>
+                </processor-chain>
+            </when>
+            <otherwise>
+                <processor-chain>
+                    <logger message="Invalid id... won't do anythingÂ´.. returning original message" level="WARN" doc:name="Logger"/>
+                </processor-chain>
+            </otherwise>
+        </choice>
+    </flow>
+</mule>

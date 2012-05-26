@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="CE-3.2.1" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd 
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd 
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd ">
+    <object-to-string-transformer name="obj2str" doc:name="Object to String"/>
+    <custom-transformer class="org.mule.module.xml.transformer.XmlToOutputHandler" name="xml2output" doc:name="Java"/>
+    <http:endpoint name="EP-EchoProxyWS" address="http://0.0.0.0:8081/Echo" doc:name="HTTP"/>
+    <http:endpoint name="EP-EchoServiceWS" address="http://194.47.150.33:6587/EchoService" contentType="text/xml" doc:name="HTTP"/>
+    <flow name="echoProxy" doc:name="echoProxy">
+        <inbound-endpoint exchange-pattern="request-response" ref="EP-EchoProxyWS" doc:name="EchoProxy"/>
+        <cxf:proxy-service namespace="http://ws.webservice.korsdrag.datanizze.se/" service="EchoServiceImplService" wsdlLocation="http://194.47.150.44:6587/EchoService?wsdl" enableMuleSoapHeaders="false" doc:name="SOAP"/>
+        <outbound-endpoint exchange-pattern="request-response" ref="EP-EchoServiceWS" doc:name="Generic">
+            <cxf:proxy-client/>
+        </outbound-endpoint>
+    </flow>
+</mule>

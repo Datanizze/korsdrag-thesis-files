@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="flows1">
+    <global-element type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="3730d2a0-53bc-4b81-8568-4ef112c285d9">
+        <properties>
+            <property value="" name="port"/>
+            <property value="" name="host"/>
+            <property value="false" name="followRedirects"/>
+            <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+            <property value="false" name="keep-alive"/>
+            <property value="" name="contentType"/>
+            <property value="false" name="disableTransportTransformer"/>
+            <property value="" name="password"/>
+            <property value="" name="exchange-pattern"/>
+            <property value="" name="ref"/>
+            <property value="" name="transformer-refs"/>
+            <property value="" name="httpLabel"/>
+            <property value="http://0.0.0.0:8083/Echo" name="address"/>
+            <property value="EP-EchoTransformationWS" name="name"/>
+            <property value="" name="path"/>
+            <property value="" name="encoding"/>
+            <property value="" name="responseTransformer-refs"/>
+            <property value="" name="method"/>
+            <property value="" name="user"/>
+            <property value="" name="responseTimeout"/>
+            <property value="" name="mimeType"/>
+            <property value="" name="connector-ref"/>
+        </properties>
+        <description></description>
+    </global-element>
+    <global-element type="org.mule.tooling.ui.modules.core.global.xsltXform" name="XSLT" entity-id="22c5b003-244d-4c84-b25a-fdfa8d79be15">
+        <properties>
+            <property name="returnClass"/>
+            <property name="ignoreBadInput"/>
+            <property name="encoding"/>
+            <property name="uriResolver"/>
+            <property name="transformerFactoryClass"/>
+            <property name="mimeType"/>
+            <property name="maxIdleTransformers"/>
+            <property name="maxActiveTransformers"/>
+            <property value="json2SoapRequest.xsl" name="xsl-file"/>
+            <property name="outputEncoding"/>
+            <property value="json2SoapRequest" name="name"/>
+        </properties>
+    </global-element>
+    <global-element type="org.mule.tooling.ui.modules.core.global.xsltXform" name="XSLT" entity-id="e5e7f0c4-080d-4bb3-a1ab-c8ef0dfc6edc">
+        <properties>
+            <property name="returnClass"/>
+            <property name="ignoreBadInput"/>
+            <property name="encoding"/>
+            <property name="uriResolver"/>
+            <property name="transformerFactoryClass"/>
+            <property name="mimeType"/>
+            <property name="maxIdleTransformers"/>
+            <property name="maxActiveTransformers"/>
+            <property value="soapResponse2json.xsl" name="xsl-file"/>
+            <property name="outputEncoding"/>
+            <property value="soapResponse2json" name="name"/>
+        </properties>
+    </global-element>
+    <flow SubFlow="false" name="echoTransformation">
+        <properties>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+        </properties>
+        <lane entity-id="b7bb27de-35e9-479a-87bf-9ddafc8b230c">
+            <endpoint message-exchange-pattern="OneWay" direction="Inbound" type="http://www.mulesoft.org/schema/mule/core/endpoint" name="EchoTransformation" entity-id="2da76204-1eae-4019-b6c4-c28f62eab964">
+                <properties>
+                    <property value="one-way" name="exchange-pattern"/>
+                    <property name="address"/>
+                    <property value="request-response" name="exchange-pattern"/>
+                    <property name="responseTimeout"/>
+                    <property name="encoding"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="mimeType"/>
+                    <property value="EP-EchoTransformationWS" name="ref"/>
+                    <property name="connector-ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="responseTransformer-refs"/>
+                </properties>
+            </endpoint>
+            <pattern type="http://www.mulesoft.org/schema/mule/json/json-to-object-transformer" name="JSON to Object" entity-id="6a630b37-c571-47a9-a48b-9e091e2deea6">
+                <properties>
+                    <property name="returnClass"/>
+                    <property name="ignoreBadInput"/>
+                    <property name="encoding"/>
+                    <property name="mimeType"/>
+                    <property name="mapper-ref"/>
+                </properties>
+            </pattern>
+            <pattern type="org.mule.tooling.ui.modules.core.pattern.objectToXmlTransformer" name="Object to XML" entity-id="5190b5c1-73b0-49f4-9fab-990f6362e4aa">
+                <properties>
+                    <property name="returnClass"/>
+                    <property name="ignoreBadInput"/>
+                    <property name="encoding"/>
+                    <property name="mimeType"/>
+                    <property name="driverClass"/>
+                    <property name="acceptMuleMessage"/>
+                </properties>
+            </pattern>
+            <pattern type="http://www.mulesoft.org/schema/mule/core/transformer" name="Transformer Reference" entity-id="bc2e04c1-075a-4d04-9516-d0dd9dd5fbf8">
+                <properties>
+                    <property value="json2SoapRequest" name="ref"/>
+                </properties>
+            </pattern>
+            <endpoint message-exchange-pattern="OneWay" direction="Outbound" type="http://www.mulesoft.org/schema/mule/core/endpoint" name="Generic" entity-id="54e22fb4-ed65-4473-a922-087fcbd399dd">
+                <properties>
+                    <property value="one-way" name="exchange-pattern"/>
+                    <property name="address"/>
+                    <property name="exchange-pattern"/>
+                    <property name="responseTimeout"/>
+                    <property name="encoding"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="mimeType"/>
+                    <property value="EP-EchoServiceWS" name="ref"/>
+                    <property name="connector-ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="responseTransformer-refs"/>
+                </properties>
+            </endpoint>
+            <pattern type="http://www.mulesoft.org/schema/mule/core/transformer" name="Transformer Reference" entity-id="fb31ce9a-5a01-4b4c-957a-4382958a6970">
+                <properties>
+                    <property value="soapResponse2json" name="ref"/>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+    <description></description>
+</mule-configuration>

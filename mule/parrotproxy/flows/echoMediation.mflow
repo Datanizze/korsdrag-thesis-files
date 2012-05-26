@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="flows1">
+    <global-element type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="5e1204f8-3f32-434e-809b-ee7ff142b357">
+        <properties>
+            <property name="exchange-pattern"/>
+            <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+            <property name="httpLabel"/>
+            <property name="host"/>
+            <property name="port"/>
+            <property name="path"/>
+            <property name="method"/>
+            <property value="EP-EchoMediationWS" name="name"/>
+            <property value="http://0.0.0.0:8082/Echo" name="address"/>
+            <property name="responseTimeout"/>
+            <property name="encoding"/>
+            <property name="disableTransportTransformer"/>
+            <property name="mimeType"/>
+            <property name="followRedirects"/>
+            <property name="ref"/>
+            <property name="connector-ref"/>
+            <property name="transformer-refs"/>
+            <property name="responseTransformer-refs"/>
+            <property name="user"/>
+            <property name="password"/>
+            <property name="contentType"/>
+            <property name="keep-alive"/>
+        </properties>
+    </global-element>
+    <global-element type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="da37b9b5-d69f-4a20-a39a-108765e551cf">
+        <properties>
+            <property name="exchange-pattern"/>
+            <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+            <property name="httpLabel"/>
+            <property name="host"/>
+            <property name="port"/>
+            <property name="path"/>
+            <property name="method"/>
+            <property value="EP-EchoServiceWS2" name="name"/>
+            <property value="http://194.47.150.44:6587/EchoService" name="address"/>
+            <property name="responseTimeout"/>
+            <property name="encoding"/>
+            <property name="disableTransportTransformer"/>
+            <property name="mimeType"/>
+            <property name="followRedirects"/>
+            <property name="ref"/>
+            <property name="connector-ref"/>
+            <property name="transformer-refs"/>
+            <property name="responseTransformer-refs"/>
+            <property name="user"/>
+            <property name="password"/>
+            <property name="contentType"/>
+            <property name="keep-alive"/>
+        </properties>
+    </global-element>
+    <global-element type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="9895a9d2-0467-4153-99a2-6d677cbe9746">
+        <properties>
+            <property name="exchange-pattern"/>
+            <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+            <property name="httpLabel"/>
+            <property name="host"/>
+            <property name="port"/>
+            <property name="path"/>
+            <property name="method"/>
+            <property value="EP-EchoServiceWS3" name="name"/>
+            <property value="http://194.47.150.32:6587/EchoService" name="address"/>
+            <property name="responseTimeout"/>
+            <property name="encoding"/>
+            <property name="disableTransportTransformer"/>
+            <property name="mimeType"/>
+            <property name="followRedirects"/>
+            <property name="ref"/>
+            <property name="connector-ref"/>
+            <property name="transformer-refs"/>
+            <property name="responseTransformer-refs"/>
+            <property name="user"/>
+            <property name="password"/>
+            <property name="contentType"/>
+            <property name="keep-alive"/>
+        </properties>
+    </global-element>
+    <flow SubFlow="false" name="echoMediation">
+        <properties>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+        </properties>
+        <lane entity-id="b9dc5705-ced5-42d1-a813-b6a871f9bdda">
+            <endpoint message-exchange-pattern="OneWay" direction="Inbound" type="http://www.mulesoft.org/schema/mule/core/endpoint" name="EchoProxy" entity-id="efb76ab0-f02d-40f7-82e1-02570cd24582">
+                <properties>
+                    <property value="one-way" name="exchange-pattern"/>
+                    <property name="address"/>
+                    <property value="request-response" name="exchange-pattern"/>
+                    <property name="responseTimeout"/>
+                    <property name="encoding"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="mimeType"/>
+                    <property value="EP-EchoMediationWS" name="ref"/>
+                    <property name="connector-ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="responseTransformer-refs"/>
+                </properties>
+            </endpoint>
+            <pattern type="http://www.mulesoft.org/schema/mule/cxf/soapComponent" name="SOAP" entity-id="f1b9ae3e-fc06-4633-ad82-823ef5afe1bc">
+                <properties>
+                    <property name="configuration-ref"/>
+                    <property value="http://www.mulesoft.org/schema/mule/cxf/proxy-service" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property name="configuration-ref"/>
+                    <property name="bindingId"/>
+                    <property name="port"/>
+                    <property value="http://ws.webservice.korsdrag.datanizze.se/" name="namespace"/>
+                    <property value="EchoServiceImplService" name="service"/>
+                    <property name="serviceClass"/>
+                    <property name="validationEnabled"/>
+                    <property name="payload"/>
+                    <property name="mtomEnabled"/>
+                    <property value="http://194.47.150.44:6587/EchoService?wsdl" name="wsdlLocation"/>
+                    <property value="false" name="enableMuleSoapHeaders"/>
+                </properties>
+            </pattern>
+            <pattern type="http://www.mulesoft.org/schema/mule/core/transformer" name="Transformer Reference" entity-id="68375c3e-37b6-49da-9581-419f8f241bec">
+                <properties>
+                    <property value="xml2output obj2str" name="ref"/>
+                </properties>
+            </pattern>
+            <splitter type="org.mule.tooling.ui.modules.core.pattern.cbr" name="Choice" entity-id="87db415c-3ff2-43dd-9b99-fc5af33885a3">
+                <properties>
+                    <property-collection name="c95b8939-59c2-4e4e-9584-7c7fb19691ce">
+                        <property value="true" name="choice.otherwise"/>
+                    </property-collection>
+                    <property-collection name="76a59cad-ad7f-45eb-8f2d-975924b09b92">
+                        <property value="//id=1" name="choice.expression"/>
+                        <property value="xpath" name="choice.evaluator"/>
+                    </property-collection>
+                    <property-collection name="8e38c04a-0fe2-4487-b654-89d65b3fd47d">
+                        <property value="//id=2" name="choice.expression"/>
+                        <property value="xpath" name="choice.evaluator"/>
+                    </property-collection>
+                    <property-collection name="9c69d849-b835-4f12-a1c3-f96ef49668ba">
+                        <property value="//id=3" name="choice.expression"/>
+                        <property value="xpath" name="choice.evaluator"/>
+                    </property-collection>
+                </properties>
+                <pattern type="org.mule.tooling.ui.modules.core.pattern.cbr" name="Choice" entity-id="77522809-bd23-4660-b2a2-3b7424a2535f"/>
+                <compartment entity-id="d67ba498-45eb-4a8a-b1c9-b9060e1affcd">
+                    <lane entity-id="76a59cad-ad7f-45eb-8f2d-975924b09b92">
+                        <pattern type="org.mule.tooling.ui.modules.core.pattern.logger" name="Logger" entity-id="eab1c737-2140-4101-ad66-0c4321fbabf8">
+                            <properties>
+<property value="GOING FOR 1" name="message"/>
+<property value="INFO" name="level"/>
+<property name="category"/>
+                            </properties>
+                        </pattern>
+                        <endpoint message-exchange-pattern="OneWay" direction="Outbound" type="http://www.mulesoft.org/schema/mule/core/endpoint" name="Generic" entity-id="62dad6ef-ba84-4f29-89a6-1b4b775477f7">
+                            <properties>
+<property value="one-way" name="exchange-pattern"/>
+<property name="address"/>
+<property value="request-response" name="exchange-pattern"/>
+<property name="responseTimeout"/>
+<property name="encoding"/>
+<property name="disableTransportTransformer"/>
+<property name="mimeType"/>
+<property value="EP-EchoServiceWS" name="ref"/>
+<property name="connector-ref"/>
+<property name="transformer-refs"/>
+<property name="responseTransformer-refs"/>
+                            </properties>
+                        </endpoint>
+                    </lane>
+                    <lane entity-id="8e38c04a-0fe2-4487-b654-89d65b3fd47d">
+                        <pattern type="org.mule.tooling.ui.modules.core.pattern.logger" name="Logger" entity-id="17bc41a6-f11d-4fa1-ba7f-d97b0cbe8477">
+                            <properties>
+<property value="GOING FOR two" name="message"/>
+<property value="INFO" name="level"/>
+<property name="category"/>
+                            </properties>
+                        </pattern>
+                        <endpoint message-exchange-pattern="OneWay" direction="Outbound" type="http://www.mulesoft.org/schema/mule/core/endpoint" name="Generic" entity-id="9f97b407-e691-4073-860e-07bec2d3b5d2">
+                            <properties>
+<property value="one-way" name="exchange-pattern"/>
+<property name="address"/>
+<property value="request-response" name="exchange-pattern"/>
+<property name="responseTimeout"/>
+<property name="encoding"/>
+<property name="disableTransportTransformer"/>
+<property name="mimeType"/>
+<property value="EP-EchoServiceWS2" name="ref"/>
+<property name="connector-ref"/>
+<property name="transformer-refs"/>
+<property name="responseTransformer-refs"/>
+                            </properties>
+                        </endpoint>
+                    </lane>
+                    <lane entity-id="9c69d849-b835-4f12-a1c3-f96ef49668ba">
+                        <pattern type="org.mule.tooling.ui.modules.core.pattern.logger" name="Logger" entity-id="13ecde83-4931-4fef-833b-adb1e0d62ee1">
+                            <properties>
+<property value="GOING FOR troi" name="message"/>
+<property value="INFO" name="level"/>
+<property name="category"/>
+                            </properties>
+                        </pattern>
+                        <endpoint message-exchange-pattern="OneWay" direction="Outbound" type="http://www.mulesoft.org/schema/mule/core/endpoint" name="Generic" entity-id="99cfb380-7fed-4b37-8009-7533fdf9d21b">
+                            <properties>
+<property value="one-way" name="exchange-pattern"/>
+<property name="address"/>
+<property value="request-response" name="exchange-pattern"/>
+<property name="responseTimeout"/>
+<property name="encoding"/>
+<property name="disableTransportTransformer"/>
+<property name="mimeType"/>
+<property value="EP-EchoServiceWS3" name="ref"/>
+<property name="connector-ref"/>
+<property name="transformer-refs"/>
+<property name="responseTransformer-refs"/>
+                            </properties>
+                        </endpoint>
+                    </lane>
+                    <lane entity-id="c95b8939-59c2-4e4e-9584-7c7fb19691ce">
+                        <pattern type="org.mule.tooling.ui.modules.core.pattern.logger" name="Logger" entity-id="d4604c21-76df-4d4c-9bb0-9ba36d22c15c">
+                            <properties>
+<property value="Invalid id... won't do anythingÂ´.. returning original message" name="message"/>
+<property value="WARN" name="level"/>
+<property name="category"/>
+                            </properties>
+                        </pattern>
+                    </lane>
+                </compartment>
+            </splitter>
+        </lane>
+    </flow>
+    <description></description>
+</mule-configuration>

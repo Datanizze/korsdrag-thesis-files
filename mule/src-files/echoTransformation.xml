@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:jersey="http://www.mulesoft.org/schema/mule/jersey" xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf" xmlns:mule-xml="http://www.mulesoft.org/schema/mule/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="CE-3.2.1" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd 
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd 
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd 
+http://www.mulesoft.org/schema/mule/jersey http://www.mulesoft.org/schema/mule/jersey/current/mule-jersey.xsd 
+http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd 
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd ">
+    <http:endpoint name="EP-EchoTransformationWS" address="http://0.0.0.0:8083/Echo" doc:name="HTTP"/>
+    <mulexml:xslt-transformer xsl-file="json2SoapRequest.xsl" name="json2SoapRequest" doc:name="XSLT"/>
+    <mulexml:xslt-transformer xsl-file="soapResponse2json.xsl" name="soapResponse2json" doc:name="XSLT"/>
+    <flow name="echoTransformation" doc:name="echoTransformation">
+        <inbound-endpoint exchange-pattern="request-response" ref="EP-EchoTransformationWS" doc:name="EchoTransformation"/>
+        <json:json-to-object-transformer doc:name="JSON to Object"/>
+        <mulexml:object-to-xml-transformer doc:name="Object to XML"/>
+        <transformer ref="json2SoapRequest" doc:name="Transformer Reference"/>
+        <outbound-endpoint ref="EP-EchoServiceWS" doc:name="Generic"/>
+        <transformer ref="soapResponse2json" doc:name="Transformer Reference"/>
+    </flow>
+</mule>
