@@ -1,4 +1,4 @@
-## Grinder info
+### Grinder info
 
 http://grinder.sourceforge.net/g3/manual.html#g3/getting-started.html
 
